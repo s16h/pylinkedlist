@@ -29,9 +29,12 @@ class _SinglyNode(object):
         return '{} -> {}'.format(str(self.value), str(self.next))
 
 class SinglyLinkedList(object):
-    def __init__(self):
+    def __init__(self, elements=None):
         self.head = None
         self.tail = self.head
+        if elements is not None:
+            for element in elements:
+                self.append(element)
 
     def append(self, value):
         """Insert value at the end of the linked list"""
@@ -51,12 +54,10 @@ class SinglyLinkedList(object):
             self.tail = node
         self.head = node
 
-    def remove_first(self, value):
+    def remove_first_occurence(self, value):
         """Removes the first occurence of `value` from the linked list"""
-        # possibly check if length is 0 instead (maybe we want to allow value to be None)
-        # only feasible if __len__ is O(1)
         if self.head is None:
-            return
+            raise ValueError('{} is not in list'.format(value))
 
         if self.head.value == value:
             self.head = self.head.next
@@ -70,6 +71,8 @@ class SinglyLinkedList(object):
                 return
             previous = current
             current = current.next
+
+        raise ValueError('{} is not in list'.format(value))
 
     def remove_last(self, value):
         """Removes the last occurence of `value` from the linked list"""

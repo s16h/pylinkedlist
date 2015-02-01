@@ -11,15 +11,15 @@ class SinglyNodeTestCase(unittest.TestCase):
 
     def test_ctor(self):
         """Is a new node created with its value and next node correcty initialised?"""
-        self.assertEqual(self.node.value, None)
-        self.assertEqual(self.node.next, None)
+        self.assertIsNone(self.node.value)
+        self.assertIsNone(self.node.next)
 
         self.node = _SinglyNode(42)
         self.assertEqual(self.node.value, 42)
-        self.assertEqual(self.node.next, None)
+        self.assertIsNone(self.node.next)
 
         new_node = _SinglyNode(next=self.node)
-        self.assertEqual(new_node.value, None)
+        self.assertIsNone(new_node.value)
         self.assertEqual(new_node.next.value, self.node.value)
         self.assertEqual(new_node.next.next, self.node.next)
 
@@ -100,22 +100,19 @@ class SinglyLinkedListTestCase(unittest.TestCase):
 
     def test_ctor(self):
         """Is a newly constructed list correcty initialised?"""
-        self.assertEqual(self.ll.head, None)
+        self.assertIsNone(self.ll.head)
         self.assertEqual(self.ll.tail, self.ll.head)
+
+        elements = [1, 2, 3, 4, 5]
+        self.ll = SinglyLinkedList(elements)
+        self._compare_with_list(self.ll, elements)
 
     def test_append(self):
         """Does appending a value to the end of a list have the expected effect?"""
         values_to_append = [1, 2, 3, 4, 5]
-
         for i, value in enumerate(values_to_append):
             self.ll.append(value)
-            current = self.ll.head
-            for j in range(i + 1):
-                self.assertEqual(current.value, values_to_append[j])
-                if j == i:
-                    self.assertEqual(current.next, None)
-                else:
-                    current = current.next
+            self._compare_with_list(self.ll, values_to_append[:i+1])
 
     def test_prepend(self):
         """Does prepending a value to the beginning of a list have the expected effect?"""
@@ -123,13 +120,19 @@ class SinglyLinkedListTestCase(unittest.TestCase):
 
         for i, value in enumerate(values_to_prepend):
             self.ll.prepend(value)
-            current = self.ll.head
-            for j in range(i, 0, -1):
-                self.assertEqual(current.value, values_to_prepend[j])
-                if j == i + 1:
-                    self.assertEqual(current.next, None)
-                else:
-                    current = current.next
+            self._compare_with_list(self.ll, values_to_prepend[i::-1])
+
+    def test_remove_first_occurence(self):
+        """Does remove_first_occurence() behave as expected?"""
+        self.assertRaises(ValueError, self.ll.remove_first_occurence, 42)
+
+    def _compare_with_list(self, ll, list_):
+        """Compares the order of linked list elements with a list"""
+        current = ll.head
+        for value in list_:
+            self.assertEqual(current.value, value)
+            current = current.next
+        self.assertIsNone(current)
 
 def suite():
     suite = unittest.TestSuite()
