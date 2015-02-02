@@ -60,6 +60,8 @@ class SinglyLinkedList(object):
             raise ValueError('{} is not in list'.format(value))
 
         if self.head.value == value:
+            if self.head.next is None:
+                self.tail = self.head.next
             self.head = self.head.next
             return
 
@@ -68,13 +70,15 @@ class SinglyLinkedList(object):
         while current is not None:
             if current.value == value:
                 previous.next = current.next
+                if current.next is None:
+                    self.tail = previous
                 return
             previous = current
             current = current.next
 
         raise ValueError('{} is not in list'.format(value))
 
-    def remove_last(self, value):
+    def remove_last_occurence(self, value):
         """Removes the last occurence of `value` from the linked list"""
         pass
 

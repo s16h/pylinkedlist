@@ -126,6 +126,31 @@ class SinglyLinkedListTestCase(unittest.TestCase):
         """Does remove_first_occurence() behave as expected?"""
         self.assertRaises(ValueError, self.ll.remove_first_occurence, 42)
 
+        ELEMENTS = [1, 2, 3, 4, 5]
+
+        self.ll = SinglyLinkedList(ELEMENTS)
+        for i, element in enumerate(ELEMENTS):
+            self.ll.remove_first_occurence(element)
+            if i != len(ELEMENTS) - 1:
+                self.assertEqual(self.ll.head.value, ELEMENTS[i+1])
+                self.assertEqual(self.ll.tail.value, ELEMENTS[-1])
+            else:
+                self.assertIsNone(self.ll.head)
+                self.assertIsNone(self.ll.tail)
+
+        self.ll = SinglyLinkedList(ELEMENTS)
+        for i, element in enumerate(ELEMENTS[::-1]):
+            j = len(ELEMENTS) - 1 - i
+            self.ll.remove_first_occurence(element)
+            if j != 0:
+                self.assertEqual(self.ll.head.value, ELEMENTS[0])
+                self.assertEqual(self.ll.tail.value, ELEMENTS[j-1])
+            else:
+                self.assertIsNone(self.ll.head)
+                self.assertIsNone(self.ll.tail)
+
+        self.assertRaises(ValueError, self.ll.remove_first_occurence, None)
+
     def _compare_with_list(self, ll, list_):
         """Compares the order of linked list elements with a list"""
         current = ll.head
