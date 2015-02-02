@@ -56,14 +56,11 @@ class SinglyLinkedList(object):
 
     def remove_first_occurence(self, value):
         """Removes the first occurence of `value` from the linked list"""
-        if self.head is None:
-            raise ValueError('{} is not in list'.format(value))
-
         if self.head.value == value:
             if self.head.next is None:
                 self.tail = self.head.next
             self.head = self.head.next
-            return
+            return True
 
         previous, current = self.head, self.head.next
 
@@ -72,23 +69,76 @@ class SinglyLinkedList(object):
                 previous.next = current.next
                 if current.next is None:
                     self.tail = previous
-                return
+                return True
             previous = current
             current = current.next
 
-        raise ValueError('{} is not in list'.format(value))
+        return False
 
     def remove_last_occurence(self, value):
         """Removes the last occurence of `value` from the linked list"""
-        pass
+        # Keep track of the last found node and its previous node
+        found_previous, found_node = None, None
+        
+        previous, current = None, self.head
+        while current is not None:
+            if current.value == value:
+                found_node = current
+                found_previous = previous
+            previous = current
+            current = current.next
 
-    def remove_all(self, value):
+        if (found_previous is None) and (found_node is None):
+            return False
+
+        if found_previous is None:
+            if found_node.next is None:
+                self.tail = found_node.next
+            self.head = found_node.next
+        else:
+            if found_node.next is None:
+                self.tail = found_previous
+            found_previous.next = found_node.next
+
+        return True
+
+    def remove_all_occurences(self, value):
         """Removes all occurences of `value` from the linked list"""
-        pass
+        is_removed = False
+
+        previous, current = None, self.head
+        while current is not None:
+            if current.value == value:
+                is_removed = True
+                if previous is not None:
+                    previous.next = current.next
+                else:
+                    self.head = self.head.next
+                if current.next is None:
+                    self.tail = previous
+            else:
+                previous = current
+            current = current.next
+
+        return is_removed
+
+    def __raise_if_empty(self):
+        """Raises a ValueError if the list is empty, returns None otherwise"""
+        if self.head is None:
+            raise ValueError('list is empty')
+
+    def __raise_not_in_list(self, value):
+        """Raises a ValuError to signify that a particular value isn't in the list"""
+        raise ValueError('{} is not in list'.format(value))
+
+    def __has_only_one_element(self):
+        """Returns True if list has only one element, False otherwise."""
+        return self.head and self.head.next
 
     def remove_head(self):
         """Removes the first element of the linked list"""
         if self.head.value is None:
+            # raise exceptions
             return
         self.head = self.head.next
 

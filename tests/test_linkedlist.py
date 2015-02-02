@@ -105,14 +105,14 @@ class SinglyLinkedListTestCase(unittest.TestCase):
 
         elements = [1, 2, 3, 4, 5]
         self.ll = SinglyLinkedList(elements)
-        self._compare_with_list(self.ll, elements)
+        self.__compare_with_list(self.ll, elements)
 
     def test_append(self):
         """Does appending a value to the end of a list have the expected effect?"""
         values_to_append = [1, 2, 3, 4, 5]
         for i, value in enumerate(values_to_append):
             self.ll.append(value)
-            self._compare_with_list(self.ll, values_to_append[:i+1])
+            self.__compare_with_list(self.ll, values_to_append[:i+1])
 
     def test_prepend(self):
         """Does prepending a value to the beginning of a list have the expected effect?"""
@@ -120,38 +120,85 @@ class SinglyLinkedListTestCase(unittest.TestCase):
 
         for i, value in enumerate(values_to_prepend):
             self.ll.prepend(value)
-            self._compare_with_list(self.ll, values_to_prepend[i::-1])
+            self.__compare_with_list(self.ll, values_to_prepend[i::-1])
 
     def test_remove_first_occurence(self):
         """Does remove_first_occurence() behave as expected?"""
-        self.assertRaises(ValueError, self.ll.remove_first_occurence, 42)
+        self.assertFalse(self.ll.remove_first_occurence(42))
 
-        ELEMENTS = [1, 2, 3, 4, 5]
+        values = [1, 2, 3, 4, 5]
 
-        self.ll = SinglyLinkedList(ELEMENTS)
-        for i, element in enumerate(ELEMENTS):
-            self.ll.remove_first_occurence(element)
-            if i != len(ELEMENTS) - 1:
-                self.assertEqual(self.ll.head.value, ELEMENTS[i+1])
-                self.assertEqual(self.ll.tail.value, ELEMENTS[-1])
+        self.ll = SinglyLinkedList(values)
+        for i, element in enumerate(values):
+            self.assertTrue(self.ll.remove_first_occurence(element))
+            if i != len(values) - 1:
+                self.assertEqual(self.ll.head.value, values[i+1])
+                self.assertEqual(self.ll.tail.value, values[-1])
             else:
                 self.assertIsNone(self.ll.head)
                 self.assertIsNone(self.ll.tail)
 
-        self.ll = SinglyLinkedList(ELEMENTS)
-        for i, element in enumerate(ELEMENTS[::-1]):
-            j = len(ELEMENTS) - 1 - i
-            self.ll.remove_first_occurence(element)
+        self.ll = SinglyLinkedList(values)
+        for i, element in enumerate(values[::-1]):
+            j = len(values) - 1 - i
+            self.assertTrue(self.ll.remove_first_occurence(element))
             if j != 0:
-                self.assertEqual(self.ll.head.value, ELEMENTS[0])
-                self.assertEqual(self.ll.tail.value, ELEMENTS[j-1])
+                self.assertEqual(self.ll.head.value, values[0])
+                self.assertEqual(self.ll.tail.value, values[j-1])
             else:
                 self.assertIsNone(self.ll.head)
                 self.assertIsNone(self.ll.tail)
 
-        self.assertRaises(ValueError, self.ll.remove_first_occurence, None)
+        self.assertFalse(self.ll.remove_first_occurence(None))
 
-    def _compare_with_list(self, ll, list_):
+    def test_remove_last_occurence(self):
+        self.assertFalse(self.ll.remove_last_occurence(666))
+
+        values = [1, 2, 3, 3, 2, 1]
+        assert values == values[::-1]
+
+        self.ll = SinglyLinkedList(values)
+        for i, element in enumerate(values):
+            self.assertTrue(self.ll.remove_last_occurence(element))
+            if i != len(values) - 1:
+                self.assertEqual(self.ll.head.value, values[0])
+                self.assertEqual(self.ll.tail.value, values[-i-2])
+            else:
+                self.assertIsNone(self.ll.head)
+                self.assertIsNone(self.ll.tail)
+
+    def test_remove_all_occurences(self):
+        values = [1]
+        self.ll = SinglyLinkedList(values)
+        self.assertTrue(self.ll.remove_all_occurences(values[0]))
+        self.assertIsNone(self.ll.head)
+        self.assertIsNone(self.ll.tail)
+
+        values = [1, 2, 3, 3, 2, 1]
+        assert len(list(set(values))) < len(values)
+
+        self.ll = SinglyLinkedList(values)
+
+        first_value_to_remove = 1
+        self.assertTrue(self.ll.remove_all_occurences(first_value_to_remove))
+        self.assertEqual(self.ll.head.value, 2)
+        self.assertEqual(self.ll.tail.value, 2)
+        self.__compare_with_list(self.ll, [v for v in values
+                                             if v != first_value_to_remove])
+
+        second_value_to_remove = 2
+        self.assertTrue(self.ll.remove_all_occurences(second_value_to_remove))
+        self.assertEqual(self.ll.head.value, 3)
+        self.assertEqual(self.ll.tail.value, 3)
+        self.__compare_with_list(self.ll, [v for v in values
+                                             if v not in (first_value_to_remove, second_value_to_remove)])
+
+        third_value_to_remove = 3
+        self.assertTrue(self.ll.remove_all_occurences(third_value_to_remove))
+        self.assertIsNone(self.ll.head)
+        self.assertIsNone(self.ll.tail)
+
+    def __compare_with_list(self, ll, list_):
         """Compares the order of linked list elements with a list"""
         current = ll.head
         for value in list_:
