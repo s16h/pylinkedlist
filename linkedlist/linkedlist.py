@@ -32,9 +32,13 @@ class SinglyLinkedList(object):
     def __init__(self, elements=None):
         self.head = None
         self.tail = self.head
-        if elements is not None:
-            for element in elements:
-                self.append(element)
+
+        self.append_all(elements)
+
+    def append_all(self, elements=None):
+        elements = elements or []
+        for element in elements:
+            self.append(element)
 
     def append(self, value):
         """Insert value at the end of the linked list"""
@@ -56,7 +60,7 @@ class SinglyLinkedList(object):
 
     def remove_first_occurence(self, value):
         """Removes the first occurence of `value` from the linked list"""
-        return self._remove(value, only_first=True)
+        return self.__remove(value, only_first=True)
 
     def remove_last_occurence(self, value):
         """Removes the last occurence of `value` from the linked list"""
@@ -87,7 +91,7 @@ class SinglyLinkedList(object):
 
     def remove_all_occurences(self, value):
         """Removes all occurences of `value` from the linked list"""
-        return self._remove(value, only_first=False)
+        return self.__remove(value, only_first=False)
 
     def __remove(self, value, only_first):
         is_removed = False
