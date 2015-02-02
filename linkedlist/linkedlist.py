@@ -56,6 +56,9 @@ class SinglyLinkedList(object):
 
     def remove_first_occurence(self, value):
         """Removes the first occurence of `value` from the linked list"""
+        if self.head is None:
+            return False
+            
         if self.head.value == value:
             if self.head.next is None:
                 self.tail = self.head.next
@@ -121,11 +124,6 @@ class SinglyLinkedList(object):
             current = current.next
 
         return is_removed
-
-    def __raise_if_empty(self):
-        """Raises a ValueError if the list is empty, returns None otherwise"""
-        if self.head is None:
-            raise ValueError('list is empty')
 
     def __raise_not_in_list(self, value):
         """Raises a ValuError to signify that a particular value isn't in the list"""
