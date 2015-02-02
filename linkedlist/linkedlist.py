@@ -56,27 +56,7 @@ class SinglyLinkedList(object):
 
     def remove_first_occurence(self, value):
         """Removes the first occurence of `value` from the linked list"""
-        if self.head is None:
-            return False
-            
-        if self.head.value == value:
-            if self.head.next is None:
-                self.tail = self.head.next
-            self.head = self.head.next
-            return True
-
-        previous, current = self.head, self.head.next
-
-        while current is not None:
-            if current.value == value:
-                previous.next = current.next
-                if current.next is None:
-                    self.tail = previous
-                return True
-            previous = current
-            current = current.next
-
-        return False
+        return self._remove(value, only_first=True)
 
     def remove_last_occurence(self, value):
         """Removes the last occurence of `value` from the linked list"""
@@ -107,6 +87,9 @@ class SinglyLinkedList(object):
 
     def remove_all_occurences(self, value):
         """Removes all occurences of `value` from the linked list"""
+        return self._remove(value, only_first=False)
+
+    def __remove(self, value, only_first):
         is_removed = False
 
         previous, current = None, self.head
@@ -119,6 +102,8 @@ class SinglyLinkedList(object):
                     self.head = self.head.next
                 if current.next is None:
                     self.tail = previous
+                if only_first:
+                    break
             else:
                 previous = current
             current = current.next
