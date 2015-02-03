@@ -14,7 +14,7 @@ class _SinglyNode(object):
     def __eq__(self, other):
         if isinstance(other, _SinglyNode):
             return (self.value == other.value) and (self.next == other.next)
-        raise NotImplemented
+        return NotImplemented
 
     def __format__(self, format_spec):
         raise NotImplementedError()
@@ -35,13 +35,20 @@ class SinglyLinkedList(object):
 
         self.append_all(elements)
 
-    def append_all(self, elements=None):
-        elements = elements or []
-        for element in elements:
-            self.append(element)
+    def append_all(self, values=None):
+        """Insert all the values, one by one, at the end of the linked list
+
+        :param iterable values: The values to append to the list
+        """
+        values = values or []
+        for value in values:
+            self.append(value)
 
     def append(self, value):
-        """Insert value at the end of the linked list"""
+        """Insert value at the end of the linked list
+
+        :param object value: The value to append to the list
+        """
         node = _SinglyNode(value)
         if self.head is not None:
             self.tail.next = node
@@ -113,14 +120,6 @@ class SinglyLinkedList(object):
             current = current.next
 
         return is_removed
-
-    def __raise_not_in_list(self, value):
-        """Raises a ValuError to signify that a particular value isn't in the list"""
-        raise ValueError('{} is not in list'.format(value))
-
-    def __has_only_one_element(self):
-        """Returns True if list has only one element, False otherwise."""
-        return self.head and self.head.next
 
     def remove_head(self):
         """Removes the first element of the linked list"""
