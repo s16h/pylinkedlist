@@ -48,9 +48,8 @@ class SinglyLinkedList(object):
     def append(self, value):
         """Insert value at the end of the list
 
-        Worst-case Time Complexity: O(1)
-
         :param object value: The value to append to the end of the list
+        :Worst-case Time Complexity: O(1)
         """
         node = _SinglyNode(value)
         if self.head is not None:
@@ -63,9 +62,8 @@ class SinglyLinkedList(object):
     def prepend(self, value):
         """Insert value at the start of the linked list
 
-        Worst-case Time Complexity: O(1)
-
         :param object value: The value to prepend to the beginning of the list
+        :Worst-case Time Complexity: O(1)
         """
         node = _SinglyNode(value)
         node.next = self.head
@@ -76,18 +74,20 @@ class SinglyLinkedList(object):
     def remove_first_occurence(self, value):
         """Removes the first occurence of `value` from the linked list
 
-        Worst-case Time Complexity: O(``len(self)``)
-
         :param object value: The value to remove first occurence from the list
+        :returns: ``True`` if value is removed, ``False`` otherwise
+        :rtype: bool
+        :Worst-case Time Complexity: O(``len(self)``)
         """
         return self.__remove(value, only_first=True)
 
     def remove_last_occurence(self, value):
         """Removes the last occurence of `value` from the linked list
 
-        Worst-case Time Complexity: O(``len(self)``)
-
         :param object value: The value to remove last occurence from the list
+        :returns: ``True`` if value is removed, ``False`` otherwise
+        :rtype: bool
+        :Worst-case Time Complexity: O(``len(self)``)
         """
         # Keep track of the last found node and its previous node
         found_previous, found_node = None, None
@@ -117,9 +117,10 @@ class SinglyLinkedList(object):
     def remove_all_occurences(self, value):
         """Removes all occurences of `value` from the linked list
 
-        Worst-case Time Complexity: O(``len(self)``)
-
         :param object value: The value to remove all occurences from the list
+        :returns: ``True`` if value is removed, ``False`` otherwise
+        :rtype: bool
+        :Worst-case Time Complexity: O(``len(self)``)
         """
         return self.__remove(value, only_first=False)
 
@@ -152,7 +153,9 @@ class SinglyLinkedList(object):
     def remove_head(self):
         """Removes the first element of the linked list
 
-        Worst-case Time Complexity: O(1)
+        :returns: ``True`` if head is removed, ``False`` otherwise
+        :rtype: bool
+        :Worst-case Time Complexity: O(1)
         """
         if self.head is None:
             return False
@@ -166,7 +169,9 @@ class SinglyLinkedList(object):
     def remove_tail(self):
         """Removes the last element of the linked list
 
-        Worst-case Time Complexity: O(``len(self)``)
+        :returns: ``True`` if tail is removed, ``False`` otherwise
+        :rtype: bool
+        :Worst-case Time Complexity: O(``len(self)``)
         """
         if self.head is None:
             return False
@@ -187,7 +192,7 @@ class SinglyLinkedList(object):
     def reverse(self):
         """Reverses the list in-place; it can then be traversed backwards
 
-        Worst-case Time Complexity: O(``len(self)``)
+        :Worst-case Time Complexity: O(``len(self)``)
         """
         if self.head is None:
             return
@@ -206,6 +211,10 @@ class SinglyLinkedList(object):
         self.head = current
 
     def __add__(self, other):
+        if isinstance(other, SinglyLinkedList):
+            pass
+        else:
+            self.append_all(other)
         raise NotImplementedError()
 
     def __bool__(self):
