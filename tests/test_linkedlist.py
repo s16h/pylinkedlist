@@ -152,6 +152,7 @@ class SinglyLinkedListTestCase(unittest.TestCase):
         self.assertFalse(self.ll.remove_first_occurence(None))
 
     def test_remove_last_occurence(self):
+        """Does remove_last_occurence() behave as expected?"""
         self.assertFalse(self.ll.remove_last_occurence(666))
 
         values = [1, 2, 3, 3, 2, 1]
@@ -168,6 +169,7 @@ class SinglyLinkedListTestCase(unittest.TestCase):
                 self.assertIsNone(self.ll.tail)
 
     def test_remove_all_occurences(self):
+        """Does remove_all_occurences() behave as expected?"""
         values = [1]
         self.ll = SinglyLinkedList(values)
         self.assertTrue(self.ll.remove_all_occurences(values[0]))
@@ -198,8 +200,52 @@ class SinglyLinkedListTestCase(unittest.TestCase):
         self.assertIsNone(self.ll.head)
         self.assertIsNone(self.ll.tail)
 
+    def test_remove_head(self):
+        """Does remove_head() behave as expected?"""
+        self.assertFalse(self.ll.remove_head())
+
+        self.ll = SinglyLinkedList([1])
+        self.assertTrue(self.ll.remove_head())
+        self.assertIsNone(self.ll.head)
+        self.assertIsNone(self.ll.tail)
+        self.assertFalse(self.ll.remove_head())
+
+        self.ll = SinglyLinkedList([1, 2])
+        self.assertTrue(self.ll.remove_head())
+        self.assertEqual(self.ll.head.value, 2)
+        self.assertEqual(self.ll.tail, self.ll.head)
+
+    def test_reverse(self):
+        """Is a linked list reversed as expected?"""
+        all_values = [
+            [1],
+            [1, 2],
+            [1, 2, 3],
+            [1, None, 1, None]
+        ]
+
+        for values in all_values:
+            self.ll = SinglyLinkedList(values)
+            self.ll.reverse()
+            self.__compare_with_list(self.ll, values[::-1])
+
+    def test_remove_tail(self):
+        self.assertFalse(self.ll.remove_tail())
+
+        self.ll = SinglyLinkedList([1])
+        self.assertTrue(self.ll.remove_tail())
+        self.assertIsNone(self.ll.head)
+        self.assertIsNone(self.ll.tail)
+        self.assertFalse(self.ll.remove_tail())
+
+        self.ll = SinglyLinkedList([1, 2])
+        self.assertTrue(self.ll.remove_tail())
+        self.assertEqual(self.ll.tail.value, 1)
+        self.assertIsNone(self.ll.tail.next)
+        self.assertEqual(self.ll.tail, self.ll.head)
+
     def __compare_with_list(self, ll, list_):
-        """Compares the order of linked list elements with a list"""
+        """Helper to compare the order and size of a linked list with a list"""
         current = ll.head
         for value in list_:
             self.assertEqual(current.value, value)
