@@ -13,7 +13,8 @@ Contents:
 .. toctree::
    :maxdepth: 2
 
-
+   linkedlist.rst
+   modules.rst
 
 Indices and tables
 ==================
