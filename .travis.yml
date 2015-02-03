@@ -4,7 +4,11 @@ python:
   - "2.7"
   - "3.2"
   - "3.3"
-script: python tests/runtests.py
+  - "3.4"
+install:
+  - pip install coveralls
+script: coverage run --source=linkedlist tests/runtests.py
+after_success: coveralls
 branches:
   only:
     - master
