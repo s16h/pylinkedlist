@@ -217,6 +217,10 @@ class SinglyLinkedListTestCase(unittest.TestCase):
 
     def test_reverse(self):
         """Is a linked list reversed as expected?"""
+        self.ll.reverse()
+        self.assertIsNone(self.ll.head)
+        self.assertIsNone(self.ll.tail)
+
         all_values = [
             [1],
             [1, 2],
