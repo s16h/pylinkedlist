@@ -234,6 +234,7 @@ class SinglyLinkedListTestCase(unittest.TestCase):
             self.__compare_with_list(self.ll, values[::-1])
 
     def test_remove_tail(self):
+        """Is a linked list's tail remove as expected when invoking remove_tail()?"""
         self.assertFalse(self.ll.remove_tail())
 
         self.ll = SinglyLinkedList([1])
@@ -248,8 +249,96 @@ class SinglyLinkedListTestCase(unittest.TestCase):
         self.assertIsNone(self.ll.tail.next)
         self.assertEqual(self.ll.tail, self.ll.head)
 
+    def test_eq_ne(self):
+        """Does the __eq__ and __ne__ behave and return the expected results?"""
+        other = SinglyLinkedList()
+        self.assertEqual(self.ll, other)
+
+        other = SinglyLinkedList([1])
+        self.assertNotEqual(self.ll, other)
+
+        self.ll = SinglyLinkedList([1])
+        other = SinglyLinkedList()
+        self.assertNotEqual(self.ll, other)
+
+        self.ll = SinglyLinkedList([1, 2, 3 , 4])
+        other = SinglyLinkedList([1, 2, 3, 5])
+        self.assertNotEqual(self.ll, other)
+
+        list_of_values = [
+            [1],
+            [1, 2],
+            [1, 2, 3],
+            list(range(128)),
+            ['a', 'b', object(), set([1])]
+        ]
+
+        for values in list_of_values:
+            self.ll = SinglyLinkedList(values)
+            other = SinglyLinkedList(values)
+            self.assertEqual(self.ll, other)
+
+        self.ll = SinglyLinkedList([1, 2, 3, 4])
+        other = SinglyLinkedList([1, 2, 3, 4, 4])
+        self.assertNotEqual(self.ll, other)
+
+        self.ll = SinglyLinkedList([1, 2, 3, 4, 4])
+        other = SinglyLinkedList([1, 2, 3, 4])
+        self.assertNotEqual(self.ll, other)
+
+    def test_iter(self):
+        """Does the iteration protocol work correctly?"""
+        for value in self.ll:
+            # Should not be reached
+            assertTrue(False)
+
+        values = [1, 2, 3, 4, 5]
+        self.ll = SinglyLinkedList(values)
+        self.__compare_with_list(self.ll, values)
+
+    def test_truthiness(self):
+        self.assertEqual(self.ll.__bool__(), self.ll.__nonzero__())
+
+        self.assertFalse(self.ll)
+
+        self.ll = SinglyLinkedList([1])
+        self.assertTrue(self.ll)
+
+        self.ll = SinglyLinkedList(range(10))
+        self.assertTrue(self.ll)
+        
+        self.assertEqual(self.ll.__bool__(), self.ll.__nonzero__())
+
+    def test_len(self):
+        """Is the correct length returned by __len__()?"""
+        self.assertEqual(len(self.ll), 0)
+
+        values = [1]
+        self.ll = SinglyLinkedList(values)
+        self.assertEqual(len(self.ll), len(values))
+
+        expected_len = 64
+        values = range(expected_len)
+        self.ll = SinglyLinkedList(values)
+        self.assertEqual(len(self.ll), expected_len)
+
+    def test_repr(self):
+        """Is a linked list represented corretly by __repre__()"""
+        class_name = self.ll.__class__.__name__
+        expected_format = '{}({})'
+        cases = [
+            ([]       , expected_format.format(class_name, '')),
+            ([1]      , expected_format.format(class_name, '[1]')),
+            ([1, 2]   , expected_format.format(class_name, '[1, 2]')),
+            (range(10), expected_format.format(class_name, str(list(range(10)))))
+        ]
+        for values, expected in cases:
+            self.ll = SinglyLinkedList(values)
+            self.assertEqual(repr(self.ll), expected)
+        
+
     def __compare_with_list(self, ll, list_):
-        """Helper to compare the order and size of a linked list with a list"""
+        """Helper to compare the values, order and size of a linked list with a list"""
         current = ll.head
         for value in list_:
             self.assertEqual(current.value, value)

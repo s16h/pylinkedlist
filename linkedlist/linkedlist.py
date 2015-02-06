@@ -17,7 +17,14 @@ class _SinglyNode(object):
         return NotImplemented
 
     def __format__(self, format_spec):
-        raise NotImplementedError()
+        if format_spec == 'l':
+            as_list = []
+            current = self
+            while current is not None:
+                as_list.append(current.value)
+                current = current.next
+            return str(as_list)
+        return str(self)
 
     def __nonzero__(self):
         return self.__bool__()
@@ -29,6 +36,9 @@ class _SinglyNode(object):
         return '{} -> {}'.format(str(self.value), str(self.next))
 
 class SinglyLinkedList(object):
+    """
+    A singly linked list implementation.
+    """
     def __init__(self, elements=None):
         self.head = None
         self.tail = self.head
@@ -221,7 +231,41 @@ class SinglyLinkedList(object):
         return self.head is not None
 
     def __eq__(self, other):
-        raise NotImplementedError()
+        """
+        Two linked lists are equal if they have equal values in the same order.
+        """
+        if isinstance(other, self.__class__):
+            self_is_empty = self.head is None
+            other_is_empty = other.head is None
+
+            if self_is_empty and other_is_empty:
+                return True
+
+            if (self_is_empty and not other_is_empty) or \
+               (not self_is_empty and other_is_empty):
+                return False
+
+            if (self.head.value != other.head.value) or \
+               (self.tail.value != other.tail.value):
+               return False
+
+            current_self = self.head
+            current_other = other.head
+
+            while current_self is not None:
+                if current_other is None:
+                    return False
+                if current_self.value != current_other.value:
+                    return False
+                current_self = current_self.next
+                current_other = current_other.next
+
+            return (current_self is None) and (current_other is None)
+
+        return NotImplemented
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
 
     def __format__(self, formatstr):
         raise NotImplementedError()
@@ -232,7 +276,7 @@ class SinglyLinkedList(object):
     def __iter__(self):
         current = self.head
         while current is not None:
-            yield current
+            yield current.value
             current = current.next
 
     def __len__(self):
@@ -253,8 +297,16 @@ class SinglyLinkedList(object):
     def __radd__(self, other):
         raise NotImplementedError()
 
+    def __repr__(self):
+        repr_format = '{}({})'
+        class_name = self.__class__.__name__
+        if self.head is None:
+            return repr_format.format(class_name, '')
+        else:
+            return repr_format.format(class_name, format(self.head, 'l'))
+
     def __str__(self):
-        return str(self.head)
+        return '[{}]'.format(str(self.head))
 
     def __sizeof__(self):
         raise NotImplementedError()
