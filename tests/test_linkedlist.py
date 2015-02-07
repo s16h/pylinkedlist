@@ -2,7 +2,7 @@ import unittest
 from linkedlist.linkedlist import _SinglyNode, SinglyLinkedList
 
 class SinglyNodeTestCase(unittest.TestCase):
-    """Tests for the _SinglyNode class in `linkedlist.py`."""
+    """Tests for the ``_SinglyNode`` class"""
 
     def setUp(self):
         self.node = _SinglyNode()
@@ -95,6 +95,7 @@ class SinglyLinkedListTestCase(unittest.TestCase):
 
     def setUp(self):
         self.ll = SinglyLinkedList()
+        assert len(self.ll) == 0
         assert self.ll.head is None
         assert self.ll.tail is None
 
@@ -103,15 +104,17 @@ class SinglyLinkedListTestCase(unittest.TestCase):
         self.assertIsNone(self.ll.head)
         self.assertEqual(self.ll.tail, self.ll.head)
 
-        elements = [1, 2, 3, 4, 5]
-        self.ll = SinglyLinkedList(elements)
-        self.__compare_with_list(self.ll, elements)
+        values = [1, 2, 3, 4, 5]
+        self.ll = SinglyLinkedList(values)
+        self.assertEqual(len(self.ll), len(values))
+        self.__compare_with_list(self.ll, values)
 
     def test_append(self):
         """Does appending a value to the end of a list have the expected effect?"""
         values_to_append = [1, 2, 3, 4, 5]
         for i, value in enumerate(values_to_append):
             self.ll.append(value)
+            self.assertEqual(len(self.ll), i + 1)
             self.__compare_with_list(self.ll, values_to_append[:i+1])
 
     def test_prepend(self):
@@ -120,6 +123,7 @@ class SinglyLinkedListTestCase(unittest.TestCase):
 
         for i, value in enumerate(values_to_prepend):
             self.ll.prepend(value)
+            self.assertEqual(len(self.ll), i + 1)
             self.__compare_with_list(self.ll, values_to_prepend[i::-1])
 
     def test_remove_first_occurence(self):
@@ -134,9 +138,11 @@ class SinglyLinkedListTestCase(unittest.TestCase):
             if i != len(values) - 1:
                 self.assertEqual(self.ll.head.value, values[i+1])
                 self.assertEqual(self.ll.tail.value, values[-1])
+                self.assertEqual(len(self.ll), len(values) - i - 1)
             else:
                 self.assertIsNone(self.ll.head)
                 self.assertIsNone(self.ll.tail)
+                self.assertEqual(len(self.ll), 0)
 
         self.ll = SinglyLinkedList(values)
         for i, element in enumerate(values[::-1]):
@@ -145,9 +151,11 @@ class SinglyLinkedListTestCase(unittest.TestCase):
             if j != 0:
                 self.assertEqual(self.ll.head.value, values[0])
                 self.assertEqual(self.ll.tail.value, values[j-1])
+                self.assertEqual(len(self.ll), len(values) - i - 1)
             else:
                 self.assertIsNone(self.ll.head)
                 self.assertIsNone(self.ll.tail)
+                self.assertEqual(len(self.ll), 0)
 
         self.assertFalse(self.ll.remove_first_occurence(None))
 
@@ -164,9 +172,11 @@ class SinglyLinkedListTestCase(unittest.TestCase):
             if i != len(values) - 1:
                 self.assertEqual(self.ll.head.value, values[0])
                 self.assertEqual(self.ll.tail.value, values[-i-2])
+                self.assertEqual(len(self.ll), len(values) - i - 1)
             else:
                 self.assertIsNone(self.ll.head)
                 self.assertIsNone(self.ll.tail)
+                self.assertEqual(len(self.ll), 0)
 
     def test_remove_all_occurences(self):
         """Does remove_all_occurences() behave as expected?"""
@@ -185,15 +195,18 @@ class SinglyLinkedListTestCase(unittest.TestCase):
         self.assertTrue(self.ll.remove_all_occurences(first_value_to_remove))
         self.assertEqual(self.ll.head.value, 2)
         self.assertEqual(self.ll.tail.value, 2)
-        self.__compare_with_list(self.ll, [v for v in values
-                                             if v != first_value_to_remove])
+        expected_values = [v for v in values if v != first_value_to_remove]
+        self.assertEqual(len(self.ll), len(expected_values))
+        self.__compare_with_list(self.ll, expected_values)
 
         second_value_to_remove = 2
         self.assertTrue(self.ll.remove_all_occurences(second_value_to_remove))
         self.assertEqual(self.ll.head.value, 3)
         self.assertEqual(self.ll.tail.value, 3)
-        self.__compare_with_list(self.ll, [v for v in values
-                                             if v not in (first_value_to_remove, second_value_to_remove)])
+        expected_values = [v for v in values
+                             if v not in (first_value_to_remove, second_value_to_remove)]
+        self.assertEqual(len(self.ll), len(expected_values))
+        self.__compare_with_list(self.ll, expected_values)
 
         third_value_to_remove = 3
         self.assertTrue(self.ll.remove_all_occurences(third_value_to_remove))
@@ -206,12 +219,15 @@ class SinglyLinkedListTestCase(unittest.TestCase):
 
         self.ll = SinglyLinkedList([1])
         self.assertTrue(self.ll.remove_head())
+        self.assertEqual(len(self.ll), 0)
         self.assertIsNone(self.ll.head)
         self.assertIsNone(self.ll.tail)
         self.assertFalse(self.ll.remove_head())
+        self.assertEqual(len(self.ll), 0)
 
         self.ll = SinglyLinkedList([1, 2])
         self.assertTrue(self.ll.remove_head())
+        self.assertEqual(len(self.ll), 1)
         self.assertEqual(self.ll.head.value, 2)
         self.assertEqual(self.ll.tail, self.ll.head)
 
@@ -239,9 +255,11 @@ class SinglyLinkedListTestCase(unittest.TestCase):
 
         self.ll = SinglyLinkedList([1])
         self.assertTrue(self.ll.remove_tail())
+        self.assertEqual(len(self.ll), 0)
         self.assertIsNone(self.ll.head)
         self.assertIsNone(self.ll.tail)
         self.assertFalse(self.ll.remove_tail())
+        self.assertEqual(len(self.ll), 0)
 
         self.ll = SinglyLinkedList([1, 2])
         self.assertTrue(self.ll.remove_tail())
@@ -306,7 +324,7 @@ class SinglyLinkedListTestCase(unittest.TestCase):
 
         self.ll = SinglyLinkedList(range(10))
         self.assertTrue(self.ll)
-        
+
         self.assertEqual(self.ll.__bool__(), self.ll.__nonzero__())
 
     def test_len(self):
@@ -316,6 +334,9 @@ class SinglyLinkedListTestCase(unittest.TestCase):
         values = [1]
         self.ll = SinglyLinkedList(values)
         self.assertEqual(len(self.ll), len(values))
+        for i in range(10):
+            self.ll.remove_head()
+            self.assertEqual(len(self.ll), 0)
 
         expected_len = 64
         values = range(expected_len)
@@ -335,7 +356,6 @@ class SinglyLinkedListTestCase(unittest.TestCase):
         for values, expected in cases:
             self.ll = SinglyLinkedList(values)
             self.assertEqual(repr(self.ll), expected)
-        
 
     def __compare_with_list(self, ll, list_):
         """Helper to compare the values, order and size of a linked list with a list"""

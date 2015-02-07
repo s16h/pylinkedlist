@@ -30,7 +30,8 @@ class _SinglyNode(object):
         return self.__bool__()
 
     def __repr__(self):
-        return '_SinglyNode(value={}, next={})'.format(self.value, repr(self.next))
+        string = '_SinglyNode(value={}, next={})'
+        return string.format(self.value, repr(self.next))
 
     def __str__(self):
         return '{} -> {}'.format(str(self.value), str(self.next))
@@ -42,6 +43,7 @@ class SinglyLinkedList(object):
     def __init__(self, elements=None):
         self.head = None
         self.tail = self.head
+        self.length = 0
 
         self.append_all(elements)
 
@@ -69,6 +71,8 @@ class SinglyLinkedList(object):
             self.tail = node
             self.head = self.tail
 
+        self.length += 1
+
     def prepend(self, value):
         """Insert value at the start of the linked list
 
@@ -80,6 +84,8 @@ class SinglyLinkedList(object):
         if self.head is None:
             self.tail = node
         self.head = node
+
+        self.length += 1
 
     def remove_first_occurence(self, value):
         """Removes the first occurence of `value` from the linked list
@@ -122,6 +128,7 @@ class SinglyLinkedList(object):
                 self.tail = found_previous
             found_previous.next = found_node.next
 
+        self.length -= 1
         return True
 
     def remove_all_occurences(self, value):
@@ -137,8 +144,9 @@ class SinglyLinkedList(object):
     def __remove(self, value, only_first):
         """Helper to remove either first or all occurences of a value
 
-        :param object value: The value to remove first or all occurences from the list
-        :param bool only_first: If ``True``, only first occurence will be removed, otherwise all occurences will be removed
+        :param object value: The value to remove first or all occurences fromthe list
+        :param bool only_first: If ``True``, only first occurence will be removed,
+        otherwise all occurences will be removed
         """
         is_removed = False
 
@@ -146,6 +154,7 @@ class SinglyLinkedList(object):
         while current is not None:
             if current.value == value:
                 is_removed = True
+                self.length -= 1
                 if previous is not None:
                     previous.next = current.next
                 else:
@@ -174,6 +183,7 @@ class SinglyLinkedList(object):
         if self.head is None:
             self.tail = self.head
 
+        self.length -= 1
         return True
 
     def remove_tail(self):
@@ -197,6 +207,7 @@ class SinglyLinkedList(object):
             previous = current
             current = current.next
 
+        self.length -= 1
         return True
 
     def reverse(self):
@@ -280,16 +291,7 @@ class SinglyLinkedList(object):
             current = current.next
 
     def __len__(self):
-        # Consider storing length as an instance property.
-        # Then we don't have to to an O(n) iteration everytime
-        # __len__()) is called.
-        length = 0
-        current = self.head
-        while (current is not None):
-            length += 1
-            current = current.next
-
-        return length
+        return self.length
 
     def __nonzero__(self):
         return self.__bool__()
