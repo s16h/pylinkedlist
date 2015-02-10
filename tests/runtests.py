@@ -22,7 +22,7 @@ def make_and_get_suite(test_modules):
 
 def test_modules():
     """Returns a list of names of the test modules"""
-    return ['test_linkedlist']
+    return ['test_singly']
 
 if __name__ == '__main__':
     suite = make_and_get_suite(test_modules())
