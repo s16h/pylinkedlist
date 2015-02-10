@@ -1,3 +1,5 @@
+from _utils import mutates_length
+
 class _SinglyNode(object):
     __slots__ = ['value', 'next']
 
@@ -41,22 +43,33 @@ class SinglyLinkedList(object):
     A singly linked list implementation.
     """
     def __init__(self, elements=None):
+        # TODO: Make head and tail properties. Restrict modification using a descriptor?
         self.head = None
         self.tail = self.head
-        self.length = 0
+        self._length = 0
 
         self.append_all(elements)
 
-    def append_all(self, values=None):
+    def append_all(self, values):
         """Insert all the values, one by one, at the end of the list
 
         :param iterable values: The values to append to the list
+        :Worst-case Time Complexity: If `vaues` is a `SinglyLinkedList`, then
+        O(1). If `values` is any other `Iterable`, then O(``len(values)``).
         """
-        # Check if values is a SinglyLinkedList, drops time compl. to O(1)
+        if isinstance(values, SinglyLinkedList):
+            if self.head is not None:
+                self.tail.next = values.head
+            else:
+                self.head = values.head
+            self.tail = values.tail
+            return
+
         values = values or []
         for value in values:
             self.append(value)
 
+    @mutates_length(always=True)
     def append(self, value):
         """Insert value at the end of the list
 
@@ -71,8 +84,7 @@ class SinglyLinkedList(object):
             self.tail = node
             self.head = self.tail
 
-        self.length += 1
-
+    @mutates_length(always=True)
     def prepend(self, value):
         """Insert value at the start of the linked list
 
@@ -85,8 +97,7 @@ class SinglyLinkedList(object):
             self.tail = node
         self.head = node
 
-        self.length += 1
-
+    @mutates_length(decrements=True)
     def remove_first_occurence(self, value):
         """Removes the first occurence of `value` from the linked list
 
@@ -97,6 +108,7 @@ class SinglyLinkedList(object):
         """
         return self.__remove(value, only_first=True)
 
+    @mutates_length(decrements=True)
     def remove_last_occurence(self, value):
         """Removes the last occurence of `value` from the linked list
 
@@ -128,9 +140,9 @@ class SinglyLinkedList(object):
                 self.tail = found_previous
             found_previous.next = found_node.next
 
-        self.length -= 1
         return True
 
+    @mutates_length(decrements=True)
     def remove_all_occurences(self, value):
         """Removes all occurences of `value` from the linked list
 
@@ -144,17 +156,18 @@ class SinglyLinkedList(object):
     def __remove(self, value, only_first):
         """Helper to remove either first or all occurences of a value
 
-        :param object value: The value to remove first or all occurences fromthe list
+        :param object value: The value to remove first or all occurences from the list
         :param bool only_first: If ``True``, only first occurence will be removed,
         otherwise all occurences will be removed
+        :returns: The number of values removed
+        :rtype: int
         """
-        is_removed = False
+        count = 0 # number of values removed
 
         previous, current = None, self.head
         while current is not None:
             if current.value == value:
-                is_removed = True
-                self.length -= 1
+                count += 1
                 if previous is not None:
                     previous.next = current.next
                 else:
@@ -167,8 +180,9 @@ class SinglyLinkedList(object):
                 previous = current
             current = current.next
 
-        return is_removed
+        return count
 
+    @mutates_length(decrements=True)
     def remove_head(self):
         """Removes the first element of the linked list
 
@@ -181,11 +195,11 @@ class SinglyLinkedList(object):
 
         self.head = self.head.next
         if self.head is None:
-            self.tail = self.head
+            self.tail = self.head 
 
-        self.length -= 1
         return True
 
+    @mutates_length(decrements=True)
     def remove_tail(self):
         """Removes the last element of the linked list
 
@@ -207,7 +221,6 @@ class SinglyLinkedList(object):
             previous = current
             current = current.next
 
-        self.length -= 1
         return True
 
     def reverse(self):
@@ -291,7 +304,7 @@ class SinglyLinkedList(object):
             current = current.next
 
     def __len__(self):
-        return self.length
+        return self._length
 
     def __nonzero__(self):
         return self.__bool__()

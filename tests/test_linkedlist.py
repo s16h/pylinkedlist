@@ -1,5 +1,5 @@
 import unittest
-from linkedlist.linkedlist import _SinglyNode, SinglyLinkedList
+from pylinkedlist.linkedlist import _SinglyNode, SinglyLinkedList
 
 class SinglyNodeTestCase(unittest.TestCase):
     """Tests for the ``_SinglyNode`` class"""
@@ -95,7 +95,7 @@ class SinglyLinkedListTestCase(unittest.TestCase):
 
     def setUp(self):
         self.ll = SinglyLinkedList()
-        assert len(self.ll) == 0
+        self.assertEqual(len(self.ll), 0)
         assert self.ll.head is None
         assert self.ll.tail is None
 
@@ -108,6 +108,18 @@ class SinglyLinkedListTestCase(unittest.TestCase):
         self.ll = SinglyLinkedList(values)
         self.assertEqual(len(self.ll), len(values))
         self.__compare_with_list(self.ll, values)
+
+    def test_append_all(self):
+        values = [1, 2, 3, 4, 5]
+        self.ll.append_all(values)
+        self.__compare_with_list(self.ll, values)
+
+        self.ll = SinglyLinkedList([0])
+        other = SinglyLinkedList(values)
+        self.ll.append_all(other)
+        self.__compare_with_list(self.ll, [0] + list(other))
+        self.assertEqual(self.ll.head.value, 0)
+        self.assertEqual(self.ll.tail.value, values[-1])
 
     def test_append(self):
         """Does appending a value to the end of a list have the expected effect?"""
