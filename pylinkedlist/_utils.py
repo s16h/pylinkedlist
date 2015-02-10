@@ -1,3 +1,5 @@
+from functools import wraps
+
 def mutates_length(always=False, decrements=False):
     """Decorator to indicate that execution of a method will change the length
 
@@ -8,6 +10,7 @@ def mutates_length(always=False, decrements=False):
     this parameter is set to ``True``.
     """
     def wrapper(method):
+        @wraps(method)
         def incrementer(self, *args, **kwargs):
             method_output = method(self, *args, **kwargs)
             if always or (not always and method_output):
