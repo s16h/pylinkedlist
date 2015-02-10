@@ -7,7 +7,7 @@ python:
   - "3.4"
 install:
   - pip install coveralls
-script: coverage run --source=linkedlist tests/runtests.py
+script: coverage run --source=singly tests/runtests.py
 after_success: coveralls
 branches:
   only:
