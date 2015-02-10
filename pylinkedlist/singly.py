@@ -39,9 +39,7 @@ class _SinglyNode(object):
         return '{} -> {}'.format(str(self.value), str(self.next))
 
 class SinglyLinkedList(object):
-    """
-    A singly linked list implementation.
-    """
+    """A singly linked list implementation."""
     def __init__(self, elements=None):
         # TODO: Make head and tail properties. Restrict modification using a descriptor?
         self.head = None

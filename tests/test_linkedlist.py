@@ -1,5 +1,6 @@
 import unittest
-from pylinkedlist.linkedlist import _SinglyNode, SinglyLinkedList
+from pylinkedlist.singly import _SinglyNode
+from pylinkedlist import SinglyLinkedList
 
 class SinglyNodeTestCase(unittest.TestCase):
     """Tests for the ``_SinglyNode`` class"""
