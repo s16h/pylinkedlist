@@ -244,6 +244,24 @@ class SinglyLinkedListTestCase(unittest.TestCase):
         self.assertEqual(self.ll.head.value, 2)
         self.assertEqual(self.ll.tail, self.ll.head)
 
+    def test_remove_tail(self):
+        """Is a linked list's tail remove as expected when invoking remove_tail()?"""
+        self.assertFalse(self.ll.remove_tail())
+
+        self.ll = SinglyLinkedList([1])
+        self.assertTrue(self.ll.remove_tail())
+        self.assertEqual(len(self.ll), 0)
+        self.assertIsNone(self.ll.head)
+        self.assertIsNone(self.ll.tail)
+        self.assertFalse(self.ll.remove_tail())
+        self.assertEqual(len(self.ll), 0)
+
+        self.ll = SinglyLinkedList([1, 2])
+        self.assertTrue(self.ll.remove_tail())
+        self.assertEqual(self.ll.tail.value, 1)
+        self.assertIsNone(self.ll.tail.next)
+        self.assertEqual(self.ll.tail, self.ll.head)
+
     def test_reverse(self):
         """Is a linked list reversed as expected?"""
         self.ll.reverse()
@@ -262,23 +280,23 @@ class SinglyLinkedListTestCase(unittest.TestCase):
             self.ll.reverse()
             self.__compare_with_list(self.ll, values[::-1])
 
-    def test_remove_tail(self):
-        """Is a linked list's tail remove as expected when invoking remove_tail()?"""
-        self.assertFalse(self.ll.remove_tail())
+    def test_add(self):
+        """Does the __add__() operator return the expected output?"""
+        values = [1, 2, 3, 4, 5]
+        self_length_before = len(self.ll)
+        new_ll = self.ll + values
+        self_length_after = len(self.ll)
+        self.assertEqual(self_length_before, self_length_after)
+        self.assertEqual(len(new_ll), self_length_before + len(values))
 
-        self.ll = SinglyLinkedList([1])
-        self.assertTrue(self.ll.remove_tail())
-        self.assertEqual(len(self.ll), 0)
-        self.assertIsNone(self.ll.head)
-        self.assertIsNone(self.ll.tail)
-        self.assertFalse(self.ll.remove_tail())
-        self.assertEqual(len(self.ll), 0)
-
-        self.ll = SinglyLinkedList([1, 2])
-        self.assertTrue(self.ll.remove_tail())
-        self.assertEqual(self.ll.tail.value, 1)
-        self.assertIsNone(self.ll.tail.next)
-        self.assertEqual(self.ll.tail, self.ll.head)
+    def test_iadd(self):
+        """Does the __iadd__() special method return the expected output?"""
+        values = [1, 2, 3, 4, 5]
+        self_length_before = len(self.ll)
+        new_ll = values + self.ll
+        self_length_after = len(self.ll)
+        self.assertEqual(self_length_before, self_length_after)
+        self.assertEqual(len(new_ll), self_length_before + len(values))
 
     def test_eq_ne(self):
         """Does the __eq__ and __ne__ behave and return the expected results?"""
@@ -328,6 +346,7 @@ class SinglyLinkedListTestCase(unittest.TestCase):
         self.__compare_with_list(self.ll, values)
 
     def test_truthiness(self):
+        """Is a singly linked list's truthiness evaluated correctly?"""
         self.assertEqual(self.ll.__bool__(), self.ll.__nonzero__())
 
         self.assertFalse(self.ll)

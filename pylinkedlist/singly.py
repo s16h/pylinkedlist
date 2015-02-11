@@ -243,11 +243,9 @@ class SinglyLinkedList(object):
         self.head = current
 
     def __add__(self, other):
-        if isinstance(other, SinglyLinkedList):
-            pass
-        else:
-            self.append_all(other)
-        raise NotImplementedError()
+        shallow_self_copy = SinglyLinkedList(self)
+        shallow_self_copy.append_all(other)
+        return shallow_self_copy
 
     def __bool__(self):
         return self.head is not None
@@ -308,7 +306,7 @@ class SinglyLinkedList(object):
         return self.__bool__()
 
     def __radd__(self, other):
-        raise NotImplementedError()
+        return self.__add__(other)
 
     def __repr__(self):
         repr_format = '{}({})'
